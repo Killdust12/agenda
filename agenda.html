@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Minha Agenda Pessoal</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        .section {
+            border: 1px solid #1d8a92;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .form-container {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 5px;
+        }
+        input, textarea, select, button {
+            margin: 5px 0;
+            padding: 5px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        button {
+            background: #e08a09;
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        #displayArea {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Minha Agenda Pessoal</h1>
+
+    <div class="form-container">
+        <h2>Dados Pessoais</h2>
+        <input type="text" id="name" placeholder="Nome"><br>
+        <input type="email" id="email" placeholder="Email"><br>
+        <input type="tel" id="phone" placeholder="Telefone"><br>
+        <textarea id="notes" placeholder="Notas pessoais"></textarea><br>
+
+        <h2>Configurações Personalizadas</h2>
+        <label>Cor de Fundo:</label>
+        <input type="color" id="bgColor" value="#ffffff"><br>
+        <label>Cor do Texto:</label>
+        <input type="color" id="textColor" value="#000000"><br>
+        <label>Tamanho da Fonte:</label>
+        <select id="fontSize">
+            <option value="14">Pequena (14px)</option>
+            <option value="16" selected>Média (16px)</option>
+            <option value="18">Grande (18px)</option>
+        </select><br>
+
+        <button onclick="saveData()">Salvar Dados</button>
+    </div>
+
+    <div id="displayArea" class="section"></div>
+
+    <script>
+        // Carrega dados salvos ao iniciar
+        let userData = JSON.parse(localStorage.getItem('userData')) || {
+            name: '',
+            email: '',
+            phone: '',
+            notes: '',
+            bgColor: '#ffffff',
+            textColor: '#000000',
+            fontSize: '16'
+        };
+        loadData();
+
+        function saveData() {
+            userData = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                notes: document.getElementById('notes').value,
+                bgColor: document.getElementById('bgColor').value,
+                textColor: document.getElementById('textColor').value,
+                fontSize: document.getElementById('fontSize').value
+            };
+
+            localStorage.setItem('userData', JSON.stringify(userData));
+            displayData();
+        }
+
+        function loadData() {
+            document.getElementById('name').value = userData.name;
+            document.getElementById('email').value = userData.email;
+            document.getElementById('phone').value = userData.phone;
+            document.getElementById('notes').value = userData.notes;
+            document.getElementById('bgColor').value = userData.bgColor;
+            document.getElementById('textColor').value = userData.textColor;
+            document.getElementById('fontSize').value = userData.fontSize;
+            displayData();
+        }
+
+        function displayData() {
+            const displayArea = document.getElementById('displayArea');
+            displayArea.innerHTML = `
+                <h3>Seus Dados</h3>
+                <p><strong>Nome:</strong> ${userData.name || 'Não informado'}</p>
+                <p><strong>Email:</strong> ${userData.email || 'Não informado'}</p>
+                <p><strong>Telefone:</strong> ${userData.phone || 'Não informado'}</p>
+                <p><strong>Notas:</strong> ${userData.notes || 'Nenhuma nota'}</p>
+            `;
+            
+            // Aplica as configurações personalizadas
+            displayArea.style.backgroundColor = userData.bgColor;
+            displayArea.style.color = userData.textColor;
+            displayArea.style.fontSize = `${userData.fontSize}px`;
+        }
+    </script>
+</body>
+</html>
